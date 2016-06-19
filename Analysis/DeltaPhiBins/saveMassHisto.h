@@ -1,3 +1,4 @@
+using namespace std;
 #ifndef _ANA_DELTAPHIBINS_SAVEMASSHISTO_H_
 #define _ANA_DELTAPHIBINS_SAVEMASSHISTO_H_
 
@@ -15,6 +16,11 @@ Float_t ptBins[nPtBins+1] = {2.0, 3.0, 4.0, 6.0, 8.0, 10.0, 15.0, 25.0, 40.0};
 Float_t ffls3dcut[nPtBins] = {5.86,  5.86,  4.86,  4.54,  4.42,  4.06,  3.50,  3.00};
 Float_t vprobcut[nPtBins] =  {0.224, 0.224, 0.170, 0.125, 0.091, 0.069, 0.054, 0.050};
 const int nPhiBins = 5;
+
+const int nCentBins = 6;
+Int_t centBins[nCentBins+1] = {0, 10, 30, 50, 70, 90, 100};
+Float_t EPm_resolution_v2_etagap[nCentBins] = {0.685732, 0.859684, 0.805492, 0.566930, 0.211378, 0.0307577};
+Float_t EPp_resolution_v2_etagap[nCentBins] = {0.685895, 0.859866, 0.805762, 0.567147, 0.210694, 0.0329058};
 
 bool passtriggersel()
 {
@@ -59,6 +65,16 @@ bool passcutsel(Int_t iptbin, Int_t j)
         }
     }
   return returnval;
+}
+
+int findcentbin(Float_t centmin, Float_t centmax)
+{
+  for(int i=0;i<nCentBins;i++)
+    {
+      if(centmin>=centBins[i] && centmax<=centBins[i+1]) return i;
+    }
+  cout<<"Error: Cannot find valid centrality bin"<<endl;
+  return -1;
 }
 
 void findhistno(Int_t j, Bool_t isData, Int_t* histno)
@@ -106,6 +122,23 @@ void findhistno(Int_t j, Bool_t isData, Int_t* histno)
             }
         }
     }
+}
+
+void DrawCmsTlatex(TString collision)
+{
+  TLatex* texCms = new TLatex(0.18,0.93, "#scale[1.25]{CMS} #bf{#it{Preliminary}}");
+  texCms->SetNDC();
+  texCms->SetTextAlign(12);
+  texCms->SetTextSize(0.04);
+  texCms->SetTextFont(42);
+  texCms->Draw();
+
+  TLatex* texCol = new TLatex(0.96,0.93, Form("%s #sqrt{s_{NN}} = 5.02 TeV",collision.Data()));
+  texCol->SetNDC();
+  texCol->SetTextAlign(32);
+  texCol->SetTextSize(0.04);
+  texCol->SetTextFont(42);
+  texCol->Draw();
 }
 
 #endif

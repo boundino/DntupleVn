@@ -116,8 +116,10 @@ TF1* fit(Float_t ptmin, Float_t ptmax, Int_t j)
   h->Fit(Form("f_%.0f_%.0f_%d",ptmin,ptmax,j),"q","",minhisto,maxhisto);
   f->ReleaseParameter(1);
   f->SetParLimits(1,1.86,1.87);
+  /*
   f->ReleaseParameter(11);
   f->SetParLimits(11,-1.,1.);
+  */
   h->Fit(Form("f_%.0f_%.0f_%d",ptmin,ptmax,j),"L q","",minhisto,maxhisto);
   h->Fit(Form("f_%.0f_%.0f_%d",ptmin,ptmax,j),"L q","",minhisto,maxhisto);
   h->Fit(Form("f_%.0f_%.0f_%d",ptmin,ptmax,j),"L q","",minhisto,maxhisto);
