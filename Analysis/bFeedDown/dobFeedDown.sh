@@ -2,11 +2,12 @@
 
 CENTMIN=30
 CENTMAX=50
-
+TFEND=("inclusive" "v2_inpl" "v2_outpl" "v3_inpl" "v3_outpl")
 #
 
 DO_SAVEMASSHISTO=0
 DO_BFEEDDOWNFRACTION=1
+DO_PLOTFRACTIONS=1
 
 ##
 
@@ -25,6 +26,15 @@ fi
 
 if [ $DO_BFEEDDOWNFRACTION -eq 1 ]; then 
 g++ bFeedDownFraction.C $(root-config --cflags --libs) -g -o bFeedDownFraction.exe 
-./bFeedDownFraction.exe "$OUTPUT_SAVEMASSHISTO" "inclusive" "$CENTMIN" "$CENTMAX"
+for tend in ${TFEND[@]}
+do
+    ./bFeedDownFraction.exe "$OUTPUT_SAVEMASSHISTO" "$tend" "$CENTMIN" "$CENTMAX"
+done
 rm bFeedDownFraction.exe
+fi
+
+if [ $DO_PLOTFRACTIONS -eq 1 ]; then 
+g++ plotFractions.C $(root-config --cflags --libs) -g -o plotFractions.exe 
+./plotFractions.exe "$CENTMIN" "$CENTMAX"
+rm plotFractions.exe
 fi

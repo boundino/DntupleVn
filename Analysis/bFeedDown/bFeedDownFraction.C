@@ -190,7 +190,7 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
       DrawCmsTlatex("PbPb");
       texPtY->Draw();
 
-      c2->SaveAs(Form("plots/PbPb_%s_%.1f_%.1f_sideBand.pdf",tfend.Data(),ptLow,ptHigh));
+      c2->SaveAs(Form("plots/PbPb_cent_%.0f_%.0f_%s_pt_%.1f_%.1f_sideBand.pdf",centmin,centmax,tfend.Data(),ptLow,ptHigh));
 
       c15->cd(1);
 
@@ -233,7 +233,7 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
 
         }
 
-      c15->SaveAs(Form("plots/PbPb_%s_%.1f_%.1f_invMassFit.pdf",tfend.Data(),ptLow,ptHigh));
+      c15->SaveAs(Form("plots/PbPb_cent_%.0f_%.0f_%s_pt_%.1f_%.1f_invMassFit.pdf",centmin,centmax,tfend.Data(),ptLow,ptHigh));
 
       divideBinWidth(hD0DcaDataFit);
 
@@ -437,7 +437,7 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
       fLine1->Draw("same");
       hD0DcaDataOverFit->Draw("esame");
 
-      c4->SaveAs(Form("plots/PbPb_%s_%.1f_%.1f_fit.pdf",tfend.Data(),ptLow,ptHigh));
+      c4->SaveAs(Form("plots/PbPb_cent_%.0f_%.0f_%s_pt_%.1f_%.1f_fit.pdf",centmin,centmax,tfend.Data(),ptLow,ptHigh));
 
       delete hD0DcaMCPSignal;
       delete hD0DcaMCNPSignal;
@@ -472,7 +472,7 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
   leg->AddEntry(grFraction2, "statistic error from real data only", "l");
   leg->Draw();
 
-  c1->SaveAs(Form("plotsResult/promptFraction_%s.pdf",tfend.Data()));
+  c1->SaveAs(Form("plotsResult/promptFraction_cent_%.0f_%.0f_%s.pdf",centmin,centmax,tfend.Data()));
 
   c1->SetLogy();
 
@@ -488,7 +488,7 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
   c1->SetBottomMargin(0.14);
   hBtoDRawYield->Draw("p");
 
-  c1->SaveAs(Form("plotsResult/BtoD_%s.pdf",tfend.Data()));
+  c1->SaveAs(Form("plotsResult/BtoD_cent_%.0f_%.0f_%s.pdf",centmin,centmax,tfend.Data()));
 
   TH1D* hPromptDRawYield = new TH1D("hPromptDRawYield", ";p_{T} (GeV/c);counts per GeV/c", nPtBins, ptBins);
   for(int i=1; i<=nPtBins; i++)
@@ -502,20 +502,13 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
   c1->SetBottomMargin(0.14);
   hPromptDRawYield->Draw("p");
 
-  c1->SaveAs(Form("plotsResult/promptD_%s.pdf",tfend.Data()));
+  c1->SaveAs(Form("plotsResult/promptD_cent_%.0f_%.0f_%s.pdf",centmin,centmax,tfend.Data()));
 
-  TFile* fOut = new TFile(Form("outfilesResult/bFeedDownResult_%s.root",tfend.Data()), "recreate");
+  TFile* fOut = new TFile(Form("outfilesResult/bFeedDownResult_cent_%.0f_%.0f_%s.root",centmin,centmax,tfend.Data()), "recreate");
   grFraction->Write();
   grFraction2->Write();
   hBtoDRawYield->Write();
   hPromptDRawYield->Write();
-  /*
-  fOut->WriteTObject(grFraction);
-  fOut->WriteTObject(grFraction2);
-  fOut->WriteTObject(hBtoDRawYield);
-  fOut->WriteTObject(hPromptDRawYield);
-  fOut->Write();
-  */
   fOut->Close();
 }
 
