@@ -48,6 +48,8 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
   float promptFraction[nPtBins];
   float promptFractionError[nPtBins];
   float promptFractionErrorDataOnly[nPtBins];
+  float promptFraction_DCA[nPtBins];
+  float promptFractionError_DCA[nPtBins];
   float totalYield[nPtBins];
   float totalYieldError[nPtBins];
   float bToDYield[nPtBins];
@@ -57,17 +59,29 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
 
   initBins();
 
+  TLatex* texCms = new TLatex(0.14,0.95, "#scale[1.25]{CMS} #bf{#it{Preliminary}}");
+  texCms->SetNDC();
+  texCms->SetTextAlign(12);
+  texCms->SetTextSize(0.06);
+  texCms->SetTextFont(42);
+  TLatex* texCol = new TLatex(0.96,0.95, "PbPb #sqrt{s_{NN}} = 5.02 TeV");
+  texCol->SetNDC();
+  texCol->SetTextAlign(32);
+  texCol->SetTextSize(0.06);
+  texCol->SetTextFont(42);
+
   for(int i=1;i<nPtBins+1;i++)
     {
       pts[i-1] = 0.5*(ptBins[i-1]+ptBins[i]);
       ptErrors[i-1] = 0.5*(ptBins[i]-ptBins[i-1]);
       float ptLow = ptBins[i-1];
       float ptHigh = ptBins[i];
-      cout<<endl<<"======================================="<<endl;
-      cout<<"pT range: "<<ptLow<<" "<<ptHigh<<endl;
+      cout<<endl;
+      cout<<"  --- Processing pT range: "<<ptLow<<" - "<<ptHigh<<endl;
 
-      TLatex* texPtY = new TLatex(0.32,0.82,Form("%.1f < p_{T} < %.1f GeV/c      |y| < 1.0",ptLow,ptHigh));
+      TLatex* texPtY = new TLatex(0.94,0.82,Form("%.1f < p_{T} < %.1f GeV/c      |y| < 1.0",ptLow,ptHigh));
       texPtY->SetNDC();
+      texPtY->SetTextAlign(32);
       texPtY->SetTextFont(42);
       texPtY->SetTextSize(0.06);
       texPtY->SetLineWidth(2);
@@ -97,7 +111,8 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
       setColorTitleLabel(hMData, kBlack);
       TF1* fMass = fitMass(hMData, hMMCSignal, hMMCSwapped);
 
-      DrawCmsTlatex("PbPb");
+      texCms->Draw();
+      texCol->Draw();
       texPt->Draw();
       texY->Draw();
 
@@ -125,12 +140,12 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
       texScale->SetLineWidth(2);
       texScale->Draw();
 
-      TLine* lineSignal1 = new TLine(massSignal1, 0, massSignal1, hMData->GetMaximum()*0.5);
-      TLine* lineSignal2 = new TLine(massSignal2, 0, massSignal2, hMData->GetMaximum()*0.5);
-      TLine* lineSideBand1 = new TLine(massSideBand1, 0, massSideBand1, hMData->GetMaximum()*0.5);
-      TLine* lineSideBand2 = new TLine(massSideBand2, 0, massSideBand2, hMData->GetMaximum()*0.5);
-      TLine* lineSideBand3 = new TLine(massSideBand3, 0, massSideBand3, hMData->GetMaximum()*0.5);
-      TLine* lineSideBand4 = new TLine(massSideBand4, 0, massSideBand4, hMData->GetMaximum()*0.5);
+      TLine* lineSignal1 = new TLine(massSignal1, 0, massSignal1, background->Eval(massSignal1));  lineSignal1->SetLineWidth(2);  lineSignal1->SetLineStyle(5);  lineSignal1->SetLineColor(14);
+      TLine* lineSignal2 = new TLine(massSignal2, 0, massSignal2, background->Eval(massSignal2));  lineSignal2->SetLineWidth(2);  lineSignal2->SetLineStyle(5);  lineSignal2->SetLineColor(14);
+      TLine* lineSideBand1 = new TLine(massSideBand1, 0, massSideBand1, background->Eval(massSideBand1));  lineSideBand1->SetLineWidth(2);  lineSideBand1->SetLineStyle(5);  lineSideBand1->SetLineColor(14);
+      TLine* lineSideBand2 = new TLine(massSideBand2, 0, massSideBand2, background->Eval(massSideBand2));  lineSideBand2->SetLineWidth(2);  lineSideBand2->SetLineStyle(5);  lineSideBand2->SetLineColor(14);
+      TLine* lineSideBand3 = new TLine(massSideBand3, 0, massSideBand3, background->Eval(massSideBand3));  lineSideBand3->SetLineWidth(2);  lineSideBand3->SetLineStyle(5);  lineSideBand3->SetLineColor(14);
+      TLine* lineSideBand4 = new TLine(massSideBand4, 0, massSideBand4, background->Eval(massSideBand4));  lineSideBand4->SetLineWidth(2);  lineSideBand4->SetLineStyle(5);  lineSideBand4->SetLineColor(14);
       lineSignal1->Draw();
       lineSignal2->Draw();
       lineSideBand1->Draw();
@@ -172,6 +187,7 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
       hD0DcaDataSubSideBand->Add(hD0DcaSideband,-1);
 
       hD0DcaData0->SetMarkerSize(0.6);
+      hD0DcaData0->SetTitle(";D^{0} DCA (cm);counts per cm");
       hD0DcaData0->Draw();
       hD0DcaSideband->Draw("hsame");
       hD0DcaSideband0->SetLineStyle(2);
@@ -187,7 +203,8 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
       leg1->AddEntry(hD0DcaSideband0,"side band unscaled","l");
       leg1->Draw("same");
 
-      DrawCmsTlatex("PbPb");
+      texCms->Draw();
+      texCol->Draw();
       texPtY->Draw();
 
       c2->SaveAs(Form("plots/PbPb_cent_%.0f_%.0f_%s_pt_%.1f_%.1f_sideBand.pdf",centmin,centmax,tfend.Data(),ptLow,ptHigh));
@@ -254,7 +271,7 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
       hD0DcaMCNPSignal->Draw("");
       hD0DcaMCPSignal->Draw("same");
 
-      TLegend* leg2 = new TLegend(0.54,0.72,0.90,0.88,NULL,"brNDC");
+      TLegend* leg2 = new TLegend(0.52,0.72,0.90,0.88,NULL,"brNDC");
       leg2->SetBorderSize(0);
       leg2->SetTextSize(0.06);
       leg2->SetTextFont(42);
@@ -283,8 +300,10 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
       fMix->SetFillColor(kRed-9);
       fMix->SetFillStyle(1001);
 
+      cout<<"   -- Fitting DCA"<<endl;
+
       float fitRangeL = 0;
-      float fitRangeH = 0.08;
+      float fitRangeH = 0.07;
 
       hD0DcaData->GetXaxis()->SetRangeUser(0,0.07);
       hD0DcaData->Draw();
@@ -303,7 +322,6 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
           if(fitStatus)
             fitPrecision *= 10;
         }
-      cout<<"============== do main fit ============"<<endl;
       fMix->SetParameters(integralTotalYield,0.9);
       fMix->SetParError(0,0.1*integralTotalYield);
       fMix->SetParError(1,0.1);
@@ -326,16 +344,19 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
 
       //      cout<<"NP integral fraction: "<<fNP->Integral(fitRangeL,fitRangeH,1.e-7)/fMix->Integral(fitRangeL,fitRangeH,1.e-7)<<endl;
       //cout<<"NP integral fraction: "<<fNP->Integral(fitRangeL,fitRangeH,fNP->GetParameters(),1.e-7)/fMix->Integral(fitRangeL,fitRangeH,fNP->GetParameters(),1.e-7)<<endl;
+      cout<<"prompt fraction (integral): "<<1-fNP->Integral(fitRangeL,fitRangeH)/fMix->Integral(fitRangeL,fitRangeH)<<endl;
       cout<<"prompt fraction (real data statistic error only): "<<fMix->GetParameter(1)<<" +- "<<fMix->GetParError(1)<<endl;
       cout<<"chi2 / NDF: "<<fitResult->Chi2()<<" / "<<fitResult->Ndf()<<endl;
       cout<<"total yield: "<<integralTotalYield<<" (integral) vs. "<<fMix->GetParameter(0)<<" +- "<<fMix->GetParError(0)<<" (fit)"<<endl;
 
       promptFraction[i-1] = fMix->GetParameter(1);
       promptFractionErrorDataOnly[i-1] = fMix->GetParError(1);
+      promptFraction_DCA[i-1] = 1-fNP->Integral(0,0.008)/fMix->Integral(0,0.008);
       totalYield[i-1] = fMix->GetParameter(0);
       totalYieldError[i-1] = fMix->GetParError(0);
 
-      DrawCmsTlatex("PbPb");
+      texCms->Draw();
+      texCol->Draw();
       texPtY->Draw();
 
       TLatex* texRatio = new TLatex(0.47,0.73,Form("Prompt frac. = %.1f #pm %.1f %%",100*fMix->GetParameter(1),100*fMix->GetParError(1)));
@@ -400,6 +421,7 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
 
       float promptFractionErrorMc = hPromptRatio->GetFunction("gaus")->GetParameter(2);
       promptFractionError[i-1] = sqrt(pow(promptFractionErrorDataOnly[i-1],2)+pow(promptFractionErrorMc,2));
+      promptFractionError_DCA[i-1] = promptFraction_DCA[i-1]*promptFractionError[i-1]/promptFraction[i-1];
       cout<<"prompt fraction: "<<promptFraction[i-1]<<" +- "<<promptFractionError[i-1]<<" (+- "<<promptFractionErrorDataOnly[i-1]<<" +- "<<promptFractionErrorMc<<" )"<<endl;
 
       bToDYield[i-1] = totalYield[i-1]*(1-promptFraction[i-1]);
@@ -463,6 +485,11 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
   grFraction2->SetLineColor(4);
   grFraction2->Draw("psame");
 
+  TGraphErrors* grFraction_DCA = new TGraphErrors(nPtBins, pts, promptFraction_DCA, ptErrors, promptFractionError_DCA);
+  grFraction_DCA->SetName("grPromptFraction_DCA");
+  grFraction_DCA->SetMarkerStyle(20);
+  grFraction_DCA->Draw("psame");
+
   TLegend* leg = new TLegend(0.2, 0.3, 0.9, 0.5);
   leg->SetBorderSize(0);
   leg->SetTextSize(0.04);
@@ -507,6 +534,7 @@ void bFeedDownFraction(TString inputfile="", TString tfend="", Float_t centmin=0
   TFile* fOut = new TFile(Form("outfilesResult/bFeedDownResult_cent_%.0f_%.0f_%s.root",centmin,centmax,tfend.Data()), "recreate");
   grFraction->Write();
   grFraction2->Write();
+  grFraction_DCA->Write();
   hBtoDRawYield->Write();
   hPromptDRawYield->Write();
   fOut->Close();

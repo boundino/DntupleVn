@@ -26,10 +26,10 @@ const int nMassBins = 60;
 Float_t fstMassBin = minhisto;
 Float_t widMassBin = binwidthmass;
 Float_t massBins[nMassBins+1];
-const int nDcaBins = 20;
-Float_t fstDcaBin = 0.001;
-Float_t widDcaBin = 1.27;
-Float_t dcaBins[nDcaBins+1];
+const int nDcaBins = 12;
+//Float_t fstDcaBin = 0.001;
+//Float_t widDcaBin = 1.27;
+Float_t dcaBins[nDcaBins+1] = {0, 0.001, 0.002, 0.003, 0.004, 0.006, 0.008, 0.012, 0.016, 0.024, 0.032, 0.045, 0.070};
 const int nD0Bins = 20;
 Float_t fstD0Bin = 3.5;
 Float_t widD0Bin = 5;
@@ -39,8 +39,8 @@ TString tfname[3][2] = {{"v2_inpl","v2_outpl"},{"v3_inpl","v3_outpl"},{"inclusiv
 
 void initBins()
 {
-  dcaBins[0] = 0;
-  for(int i=1;i<nDcaBins+1;i++) dcaBins[i] = dcaBins[i-1]+fstDcaBin*pow(widDcaBin,i-1);
+  //dcaBins[0] = 0;
+  //for(int i=1;i<nDcaBins+1;i++) dcaBins[i] = dcaBins[i-1]+fstDcaBin*pow(widDcaBin,i-1);
   for(int i=0;i<nMassBins+1;i++) massBins[i] = fstMassBin+i*widMassBin;
   for(int i=0;i<nD0Bins+1;i++) d0Bins[i] = fstD0Bin+i*widD0Bin;
 }
@@ -213,19 +213,19 @@ void findhistno(Int_t j, Bool_t isData, Int_t* histno)
     }
 }
 
-void DrawCmsTlatex(TString collision)
+void DrawCmsTlatex(TString collision, Float_t tsize=0.04)
 {
   TLatex* texCms = new TLatex(0.18,0.93, "#scale[1.25]{CMS} #bf{#it{Preliminary}}");
   texCms->SetNDC();
   texCms->SetTextAlign(12);
-  texCms->SetTextSize(0.04);
+  texCms->SetTextSize(tsize);
   texCms->SetTextFont(42);
   texCms->Draw();
 
   TLatex* texCol = new TLatex(0.96,0.93, Form("%s #sqrt{s_{NN}} = 5.02 TeV",collision.Data()));
   texCol->SetNDC();
   texCol->SetTextAlign(32);
-  texCol->SetTextSize(0.04);
+  texCol->SetTextSize(tsize);
   texCol->SetTextFont(42);
   texCol->Draw();
 }

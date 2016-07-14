@@ -1,7 +1,7 @@
 #!/bin/bash
 
-CENTMIN=30
-CENTMAX=50
+CENTMIN=10
+CENTMAX=30
 TFEND=("inclusive" "v2_inpl" "v2_outpl" "v3_inpl" "v3_outpl")
 #
 
