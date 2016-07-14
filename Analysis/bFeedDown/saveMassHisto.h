@@ -6,41 +6,49 @@ using namespace std;
 #include "setBranches.h"
 const float PI = 3.14159265359;
 
-Double_t minhisto=1.7;
-Double_t maxhisto=2.0;
-Double_t nbinsmasshisto=60;
-Double_t binwidthmass=(maxhisto-minhisto)/nbinsmasshisto;
-
 const int nPtBins = 8;
-Float_t ptBins[nPtBins+1] = {2.0, 3.0, 4.0, 6.0, 8.0, 10.0, 15.0, 25.0, 40.0};
-Float_t ffls3dcut[nPtBins] = {5.86,  5.86,  4.86,  4.54,  4.42,  4.06,  3.50,  3.00};
-Float_t vprobcut[nPtBins] =  {0.224, 0.224, 0.170, 0.125, 0.091, 0.069, 0.054, 0.050};
+Double_t ptBins[nPtBins+1] = {2.0, 3.0, 4.0, 6.0, 8.0, 10.0, 15.0, 25.0, 40.0};
+Double_t ffls3dcut[nPtBins] = {5.86,  5.86,  4.86,  4.54,  4.42,  4.06,  3.50,  3.00};
+Double_t vprobcut[nPtBins] =  {0.224, 0.224, 0.170, 0.125, 0.091, 0.069, 0.054, 0.050};
 const int nPhiBins = 5;
 
 const int nCentBins = 6;
 Int_t centBins[nCentBins+1] = {0, 10, 30, 50, 70, 90, 100};
-Float_t EPm_resolution_v2_etagap[nCentBins] = {0.685732, 0.859684, 0.805492, 0.566930, 0.211378, 0.0307577};
-Float_t EPp_resolution_v2_etagap[nCentBins] = {0.685895, 0.859866, 0.805762, 0.567147, 0.210694, 0.0329058};
+Double_t EPm_resolution_v2_etagap[nCentBins] = {0.685732, 0.859684, 0.805492, 0.566930, 0.211378, 0.0307577};
+Double_t EPp_resolution_v2_etagap[nCentBins] = {0.685895, 0.859866, 0.805762, 0.567147, 0.210694, 0.0329058};
 
+Double_t minhisto=1.7;
+Double_t maxhisto=2.0;
+Double_t nbinsmasshisto=60;
+Double_t binwidthmass=(maxhisto-minhisto)/nbinsmasshisto;
 const int nMassBins = 60;
-Float_t fstMassBin = minhisto;
-Float_t widMassBin = binwidthmass;
-Float_t massBins[nMassBins+1];
+Double_t fstMassBin = minhisto;
+Double_t widMassBin = binwidthmass;
+Double_t massBins[nMassBins+1];
+
 const int nDcaBins = 12;
-//Float_t fstDcaBin = 0.001;
-//Float_t widDcaBin = 1.27;
-Float_t dcaBins[nDcaBins+1] = {0, 0.001, 0.002, 0.003, 0.004, 0.006, 0.008, 0.012, 0.016, 0.024, 0.032, 0.045, 0.070};
+Double_t fstDcaBin = 0.001;
+Double_t widDcaBin = 1.27;
+Double_t dcaBins[nDcaBins+1] = {0, 0.001, 0.002, 0.003, 0.004, 0.006, 0.008, 0.012, 0.016, 0.024, 0.032, 0.045, 0.070};
 const int nD0Bins = 20;
-Float_t fstD0Bin = 3.5;
-Float_t widD0Bin = 5;
-Float_t d0Bins[nD0Bins+1];
+Double_t fstD0Bin = 3.5;
+Double_t widD0Bin = 5;
+Double_t d0Bins[nD0Bins+1];
 
 TString tfname[3][2] = {{"v2_inpl","v2_outpl"},{"v3_inpl","v3_outpl"},{"inclusive",""}};
 
-void initBins()
+const int nFonllBins = 400;
+Double_t fstFonllBins = 0;
+Double_t lstFonllBins = 100;
+Double_t widFonllBins = (lstFonllBins-fstFonllBins)/nFonllBins;
+
+void initBins(bool resetDca=false)
 {
-  //dcaBins[0] = 0;
-  //for(int i=1;i<nDcaBins+1;i++) dcaBins[i] = dcaBins[i-1]+fstDcaBin*pow(widDcaBin,i-1);
+  if(resetDca)
+    {
+      dcaBins[0] = 0;
+      for(int i=1;i<nDcaBins+1;i++) dcaBins[i] = dcaBins[i-1]+fstDcaBin*pow(widDcaBin,i-1);
+    }
   for(int i=0;i<nMassBins+1;i++) massBins[i] = fstMassBin+i*widMassBin;
   for(int i=0;i<nD0Bins+1;i++) d0Bins[i] = fstD0Bin+i*widD0Bin;
 }

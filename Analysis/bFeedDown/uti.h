@@ -1,6 +1,7 @@
 #ifndef _ANA_BFEEDDOWN_UTI_H_
 #define _ANA_BFEEDDOWN_UTI_H_
 
+#include <fstream>
 #include <iostream>
 #include <iomanip>
 #include <utility>
@@ -34,6 +35,9 @@
 #include <TProfile.h>
 #include "TFitter.h"
 #include "TFitResult.h"
+#include <TLegend.h>
+#include <TLegendEntry.h>
+
 
 // Remove error
 void removeError(TH1F* h)
@@ -45,17 +49,21 @@ void removeError(TH1F* h)
 }
 
 // divide by bin width
-void divideBinWidth(TH1* h)
+void divideBinWidth(TH1* h, bool doSumw2=true)
 {
-  h->Sumw2();
+  if(doSumw2) h->Sumw2();
   for(int i=1;i<=h->GetNbinsX();i++)
     {
+      Float_t valErr = 0;
       Float_t val = h->GetBinContent(i);
-      Float_t valErr = h->GetBinError(i);
       val/=h->GetBinWidth(i);
-      valErr/=h->GetBinWidth(i);
       h->SetBinContent(i,val);
-      h->SetBinError(i,valErr);
+      if(doSumw2)
+        {
+          valErr = h->GetBinError(i);
+          valErr/=h->GetBinWidth(i);
+          h->SetBinError(i,valErr);
+        }
     }
   h->GetXaxis()->CenterTitle();
   h->GetYaxis()->CenterTitle();
