@@ -108,7 +108,7 @@ void plotFractions(TString inputfrMC, TString inputfrDa, Float_t centmin, Float_
   legComparison->SetTextSize(0.04);
   legComparison->SetTextFont(42);
   legComparison->SetFillStyle(0);
-  legComparison->AddEntry(gFraction[0], "Data extraction", "pl");
+  legComparison->AddEntry(gFraction[0], "Extraction from data", "pl");
   legComparison->AddEntry(grFraction[0], "FONLL + MC eff", "pl");
   legComparison->Draw();
   cComparison->SaveAs(Form("plotsResult/cPromptFraction_Comparison_cent_%.0f_%.0f.pdf",centmin,centmax));
@@ -130,7 +130,7 @@ void plotFractions(TString inputfrMC, TString inputfrDa, Float_t centmin, Float_
   legComparisonDCA->SetTextSize(0.04);
   legComparisonDCA->SetTextFont(42);
   legComparisonDCA->SetFillStyle(0);
-  legComparisonDCA->AddEntry(gFraction[1], "Data extraction", "pl");
+  legComparisonDCA->AddEntry(gFraction[1], "Extraction from data", "pl");
   legComparisonDCA->AddEntry(grFraction[1], "FONLL + MC eff", "pl");
   legComparisonDCA->Draw();
   cComparisonDCA->SaveAs(Form("plotsResult/cPromptFraction_ComparisonDCA_cent_%.0f_%.0f.pdf",centmin,centmax));

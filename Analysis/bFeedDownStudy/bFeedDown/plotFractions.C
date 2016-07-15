@@ -66,6 +66,13 @@ void plotFractions(Float_t centmin, Float_t centmax)
   DrawCmsTlatex("PbPb");
   grFraction[0]->Draw("psame");
   grFraction_DCA[0]->Draw("psame");
+  TLatex* texMethod = new TLatex(0.32,0.63, "Extraction from data");
+  texMethod->SetNDC();
+  texMethod->SetTextAlign(12);
+  texMethod->SetTextSize(0.04);
+  texMethod->SetTextFont(42);
+  texMethod->Draw();
+  texCent->Draw();
   TLegend* legInclusive = new TLegend(0.30, 0.45, 0.80, 0.55);
   legInclusive->SetBorderSize(0);
   legInclusive->SetTextSize(0.04);
@@ -74,7 +81,6 @@ void plotFractions(Float_t centmin, Float_t centmax)
   legInclusive->AddEntry(grFraction[0], "Inclusive", "pl");
   legInclusive->AddEntry(grFraction_DCA[0], "Inclusive (DCA < 0.008 cm)", "pl");
   legInclusive->Draw();
-  texCent->Draw();
   cInclusive->SaveAs(Form("plotsResult/cPromptFraction_Inclusive_cent_%.0f_%.0f.pdf",centmin,centmax));
 
   TCanvas* cV2 = new TCanvas("cV2","",600,600);
@@ -86,6 +92,7 @@ void plotFractions(Float_t centmin, Float_t centmax)
       grFraction[i]->Draw("psame");
       grFraction_DCA[i]->Draw("psame");
     }
+  texCent->Draw();
   TLegend* legV2 = new TLegend(0.30, 0.25, 0.80, 0.55);
   legV2->SetBorderSize(0);
   legV2->SetTextSize(0.04);
@@ -98,7 +105,6 @@ void plotFractions(Float_t centmin, Float_t centmax)
   legV2->AddEntry(grFraction_DCA[1], "v_{2} in plain (DCA < 0.008 cm)", "pl");
   legV2->AddEntry(grFraction_DCA[2], "v_{2} out of plain (DCA < 0.008 cm)", "pl");
   legV2->Draw();
-  texCent->Draw();
   cV2->SaveAs(Form("plotsResult/cPromptFraction_V2_cent_%.0f_%.0f.pdf",centmin,centmax));
 
   TCanvas* cV3 = new TCanvas("cV3","",600,600);
@@ -110,6 +116,7 @@ void plotFractions(Float_t centmin, Float_t centmax)
       grFraction[i]->Draw("psame");
       grFraction_DCA[i]->Draw("psame");
     }
+  texCent->Draw();
   TLegend* legV3 = new TLegend(0.30, 0.25, 0.80, 0.55);
   legV3->SetBorderSize(0);
   legV3->SetTextSize(0.04);
@@ -122,7 +129,6 @@ void plotFractions(Float_t centmin, Float_t centmax)
   legV3->AddEntry(grFraction_DCA[3], "v_{3} in plain (DCA < 0.008 cm)", "pl");
   legV3->AddEntry(grFraction_DCA[4], "v_{3} out of plain (DCA < 0.008 cm)", "pl");
   legV3->Draw();
-  texCent->Draw();
   cV3->SaveAs(Form("plotsResult/cPromptFraction_V3_cent_%.0f_%.0f.pdf",centmin,centmax));
 }
 
