@@ -79,7 +79,7 @@ void plotFractions(Float_t centmin, Float_t centmax)
   legInclusive->SetTextFont(42);
   legInclusive->SetFillStyle(0);
   legInclusive->AddEntry(grFraction[0], "Inclusive", "pl");
-  legInclusive->AddEntry(grFraction_DCA[0], "Inclusive (DCA < 0.008 cm)", "pl");
+  legInclusive->AddEntry(grFraction_DCA[0], "DCA < 0.008 cm", "pl");
   legInclusive->Draw();
   cInclusive->SaveAs(Form("plotsResult/cPromptFraction_Inclusive_cent_%.0f_%.0f.pdf",centmin,centmax));
 
