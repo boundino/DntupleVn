@@ -18,6 +18,9 @@ void fonllDsigmadpt(TString inputFONLL="fonlls/FONLL_pp_promptDzero_5TeV_y1.dat"
   TString tlabel = inputFONLL;
   tlabel.ReplaceAll("fonlls/","");
   tlabel.ReplaceAll(".dat","");
+  TString tp = inputFONLL;
+  tp.ReplaceAll("fonlls/FONLL_pp_","");
+  tp.ReplaceAll("Dzero_5TeV_y1.dat","");
 
   cout<<endl;
   cout<<"  -- Processing FONLL: "<<tlabel<<endl;
@@ -150,6 +153,15 @@ void fonllDsigmadpt(TString inputFONLL="fonlls/FONLL_pp_promptDzero_5TeV_y1.dat"
   TLegendEntry* ent_gaeSigma = leg->AddEntry(gaeSigma,"Frag.Frac.=1.0 (pure FONLL)","PL");
   TLegendEntry* ent_gaeSigmaDzero = leg->AddEntry(gaeSigmaDzero,"Multiplied by Frag.Frac.=0.577","PL");
   leg->Draw();
+
+  TString tprompt = "Prompt D meson";
+  if(tp=="nonprompt") tprompt = "B to D meson";
+  TLatex* tPrompt = new TLatex(0.37,0.55,tprompt);
+  tPrompt->SetNDC();
+  tPrompt->SetTextColor(1);
+  tPrompt->SetTextFont(42);
+  tPrompt->SetTextSize(0.042);
+  tPrompt->Draw();
 
   gaeSigma->SetName("gaeSigma");
   gaeSigmaDzero->SetName("gaeSigmaDzero");

@@ -27,12 +27,13 @@ void plotFractions(TString inputfrMC, TString inputfrDa, Float_t centmin, Float_
     {
       grFraction[i] = (TGraphAsymmErrors*)inputfileMC[i]->Get("grPromptFraction");
       grFraction[i]->SetName(Form("grPromptFraction_%s",tfend[i].Data()));
+      grFraction[i]->SetLineWidth(1.);
       grFraction[i]->SetMarkerSize(1.1);
-      grFraction[i]->SetMarkerStyle(20);
+      if(i%2==0) grFraction[i]->SetMarkerStyle(21);
+      else grFraction[i]->SetMarkerStyle(20);
       grFraction[i]->SetLineColor(pcolor[i]);
       grFraction[i]->SetMarkerColor(pcolor[i]);
     }
-  
   TGraphErrors** gFraction = new TGraphErrors*[2];
   gFraction[0] = (TGraphErrors*)inputfileDa->Get("grPromptFraction");
   gFraction[1] = (TGraphErrors*)inputfileDa->Get("grPromptFraction_DCA");
@@ -40,11 +41,12 @@ void plotFractions(TString inputfrMC, TString inputfrDa, Float_t centmin, Float_
     {
       gFraction[i]->SetName(Form("grPromptFraction_%s",tfend[i+2].Data()));
       gFraction[i]->SetMarkerSize(1.1);
-      gFraction[i]->SetMarkerStyle(20);
+      if(i%2==0) gFraction[i]->SetMarkerStyle(21);
+      else gFraction[i]->SetMarkerStyle(20);
       gFraction[i]->SetLineColor(pcolor[i+2]);
       gFraction[i]->SetMarkerColor(pcolor[i+2]);
     }
-  
+
   TH2F* hempty = new TH2F("hempty","",20,0.,42.,10.,0.,1.);
   hempty->GetXaxis()->SetTitle("D^{0} p_{T} (GeV/c)");
   hempty->GetYaxis()->SetTitle("Prompt fraction");
@@ -73,17 +75,65 @@ void plotFractions(TString inputfrMC, TString inputfrDa, Float_t centmin, Float_
   grFraction[1]->Draw("psame");
   texCent->Draw();
   DrawCmsTlatex("PbPb");
-  TLegend* legMC = new TLegend(0.30, 0.25, 0.80, 0.55);
+  TLatex* texMethod = new TLatex(0.32,0.63, "FONLL + MC eff");
+  texMethod->SetNDC();
+  texMethod->SetTextAlign(12);
+  texMethod->SetTextSize(0.04);
+  texMethod->SetTextFont(42);
+  texMethod->Draw();
+  TLegend* legMC = new TLegend(0.30, 0.45, 0.80, 0.55);
   legMC->SetBorderSize(0);
   legMC->SetTextSize(0.04);
   legMC->SetTextFont(42);
   legMC->SetFillStyle(0);
-  legMC->AddEntry((TObject*)0, "FONLL + MC eff", NULL);
   legMC->AddEntry(grFraction[0], "Inclusive", "pl");
   legMC->AddEntry(grFraction[1], "DCA < 0.008 cm", "pl");
   legMC->Draw();
   cMC->SaveAs(Form("plotsResult/cPromptFraction_FONLL_cent_%.0f_%.0f.pdf",centmin,centmax));
 
+  TCanvas* cComparison = new TCanvas("cComparison","",600,600);
+  hempty->Draw();
+  grFraction[0]->Draw("psame");
+  gFraction[0]->Draw("psame");
+  texCent->Draw();
+  DrawCmsTlatex("PbPb");
+  TLatex* texLabel = new TLatex(0.32,0.63, "Inclusive");
+  texLabel->SetNDC();
+  texLabel->SetTextAlign(12);
+  texLabel->SetTextSize(0.04);
+  texLabel->SetTextFont(42);
+  texLabel->Draw();
+  TLegend* legComparison = new TLegend(0.30, 0.45, 0.80, 0.55);
+  legComparison->SetBorderSize(0);
+  legComparison->SetTextSize(0.04);
+  legComparison->SetTextFont(42);
+  legComparison->SetFillStyle(0);
+  legComparison->AddEntry(gFraction[0], "Data extraction", "pl");
+  legComparison->AddEntry(grFraction[0], "FONLL + MC eff", "pl");
+  legComparison->Draw();
+  cComparison->SaveAs(Form("plotsResult/cPromptFraction_Comparison_cent_%.0f_%.0f.pdf",centmin,centmax));
+
+  TCanvas* cComparisonDCA = new TCanvas("cComparisonDCA","",600,600);
+  hempty->Draw();
+  grFraction[1]->Draw("psame");
+  gFraction[1]->Draw("psame");
+  texCent->Draw();
+  DrawCmsTlatex("PbPb");
+  TLatex* texLabelDCA = new TLatex(0.32,0.63, "DCA < 0.008 cm");
+  texLabelDCA->SetNDC();
+  texLabelDCA->SetTextAlign(12);
+  texLabelDCA->SetTextSize(0.04);
+  texLabelDCA->SetTextFont(42);
+  texLabelDCA->Draw();
+  TLegend* legComparisonDCA = new TLegend(0.30, 0.45, 0.80, 0.55);
+  legComparisonDCA->SetBorderSize(0);
+  legComparisonDCA->SetTextSize(0.04);
+  legComparisonDCA->SetTextFont(42);
+  legComparisonDCA->SetFillStyle(0);
+  legComparisonDCA->AddEntry(gFraction[1], "Data extraction", "pl");
+  legComparisonDCA->AddEntry(grFraction[1], "FONLL + MC eff", "pl");
+  legComparisonDCA->Draw();
+  cComparisonDCA->SaveAs(Form("plotsResult/cPromptFraction_ComparisonDCA_cent_%.0f_%.0f.pdf",centmin,centmax));
 }
 
 int main(int argc, char *argv[])

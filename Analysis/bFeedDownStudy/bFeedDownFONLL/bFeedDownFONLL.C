@@ -37,8 +37,12 @@ void bFeedDownFONLL(TString outputFonllP, TString outputFonllNP, TString outputE
       Double_t pFractionErrl = TMath::Sqrt(nfPErrl*nfPErrl+(nfPErrl*nfPErrl*nfNP*nfNP+nfNPErrh*nfNPErrh*nfP*nfP)/((nfP+nfNP)*(nfP+nfNP)));
       Double_t pFractionErrh = TMath::Sqrt(nfPErrh*nfPErrh+(nfPErrh*nfPErrh*nfNP*nfNP+nfNPErrl*nfNPErrl*nfP*nfP)/((nfP+nfNP)*(nfP+nfNP)));
       grFraction->SetPoint(i,pt,pFraction);
-      grFraction->SetPointEYlow(i,pFractionErrl);
-      grFraction->SetPointEYhigh(i,pFractionErrh);
+      grFraction->SetPointEYlow(i,0);
+      grFraction->SetPointEYhigh(i,0);
+      /*
+      grFraction->SetPointEYlow(i,pFractionErrl*pFraction);
+      grFraction->SetPointEYhigh(i,pFractionErrh*pFraction);
+      */
     }
   TFile* fout = new TFile(Form("%s_cent_%.0f_%.0f_%s.root",outputFraction.Data(),centmin,centmax,tfend.Data()), "recreate");
   grFraction->Write();

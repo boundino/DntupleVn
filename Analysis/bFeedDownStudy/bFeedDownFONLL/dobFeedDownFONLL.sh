@@ -3,14 +3,14 @@
 CENTMIN=30
 CENTMAX=50
 
-IS_DCA=1
+IS_DCA=0
 #
-DO_FONLL=0
-DO_MCEFFICIENCY=0
-DO_PLOTPNNP=0
-DO_BFEEDDOWNFONLL=0
+DO_FONLL=1
+DO_MCEFFICIENCY=1
+DO_PLOTPNNP=1
+DO_BFEEDDOWNFONLL=1
 #
-DO_PLOTFRACTIONS=1
+DO_PLOTFRACTIONS=0
 
 ##
 
@@ -20,6 +20,10 @@ INPUTMCNP="/data/HeavyFlavourRun2/MC2015/Dntuple/PbPb/ntD_EvtBase_20160513_Dfind
 
 SELGEN="((GisSignal==1||GisSignal==2)&&(Gy>-1&&Gy<1))"
 CUT="pclusterCompatibilityFilter&&pprimaryVertexFilter&&phfCoincFilter3&&abs(PVz)<15&&Dy>-1.&&Dy<1.&&Dtrk1highPurity&&Dtrk2highPurity&&Dtrk1Pt>1.0&&Dtrk2Pt>1.0&&Dtrk1PtErr/Dtrk1Pt<0.3&&Dtrk2PtErr/Dtrk2Pt<0.3&&abs(Dtrk1Eta)<1.5&&abs(Dtrk2Eta)<1.5&&((DlxyBS/DlxyBSErr)>2.5&&Dalpha<0.12&&((Dpt>1&&Dpt<2&&(DsvpvDistance/DsvpvDisErr)>6.0&&Dchi2cl>0.25)||(Dpt>2&&Dpt<4&&(DsvpvDistance/DsvpvDisErr)>5.86&&Dchi2cl>0.224)||(Dpt>4&&Dpt<5&&(DsvpvDistance/DsvpvDisErr)>5.46&&Dchi2cl>0.196)||(Dpt>5&&Dpt<6&&(DsvpvDistance/DsvpvDisErr)>4.86&&Dchi2cl>0.170)||(Dpt>6&&Dpt<8&&(DsvpvDistance/DsvpvDisErr)>4.54&&Dchi2cl>0.125)||(Dpt>8&&Dpt<10&&(DsvpvDistance/DsvpvDisErr)>4.42&&Dchi2cl>0.091)||(Dpt>10&&Dpt<15&&(DsvpvDistance/DsvpvDisErr)>4.06&&Dchi2cl>0.069)||(Dpt>15&&Dpt<20&&(DsvpvDistance/DsvpvDisErr)>3.71&&Dchi2cl>0.056)||(Dpt>20&&Dpt<25&&(DsvpvDistance/DsvpvDisErr)>3.25&&Dchi2cl>0.054)||(Dpt>25&&(DsvpvDistance/DsvpvDisErr)>2.97&&Dchi2cl>0.050)))"
+CUTP="&&DgenBAncestorpt<=0"
+CUTNP="&&DgenBAncestorpt>0"
+CUTGP="&&GBAncestorpt<=0"
+CUTGNP="&&GBAncestorpt>0"
 WEIGHT="(pthatweight)*(maxDgenpt<pthat/1.2)*(6.14981+hiBin*(-0.156513)+hiBin*hiBin*(0.00149127)+hiBin*hiBin*hiBin*(-6.29087e-06)+hiBin*hiBin*hiBin*hiBin*(9.90029e-09))*(-0.00600791+maxDgenpt*(0.0838585)+maxDgenpt*maxDgenpt*(-0.00991096)+maxDgenpt*maxDgenpt*maxDgenpt*(0.000496019)+maxDgenpt*maxDgenpt*maxDgenpt*maxDgenpt*(-8.50065e-06))"
 
 #
@@ -28,7 +32,7 @@ TFEND="inclusive"
 CUTEND=""
 if [ $IS_DCA -eq 1 ]; then
 TFEND="DCA"
-CUTEND="&&(DsvpvDistance*TMath::Sin(Dalpha)>0.008)"
+CUTEND="&&(DsvpvDistance*TMath::Sin(Dalpha)<0.008)"
 fi
 
 #
@@ -55,8 +59,8 @@ fi
 
 if [ $DO_MCEFFICIENCY -eq 1 ]; then      
 g++ MCefficiency.C $(root-config --cflags --libs) -g -o MCefficiency.exe 
-./MCefficiency.exe "$INPUTMCP" "$OUTPUTMCEFFP" "$TFEND" "$SELGEN" "${CUT}${CUTEND}" "$WEIGHT" "$CENTMIN" "$CENTMAX"
-./MCefficiency.exe "$INPUTMCNP" "$OUTPUTMCEFFNP" "$TFEND" "$SELGEN" "${CUT}${CUTEND}" "$WEIGHT" "$CENTMIN" "$CENTMAX"
+./MCefficiency.exe "$INPUTMCP" "$OUTPUTMCEFFP" "$TFEND" "$SELGEN$CUTGP" "$CUT$CUTEND$CUTP" "$WEIGHT" "$CENTMIN" "$CENTMAX"
+./MCefficiency.exe "$INPUTMCNP" "$OUTPUTMCEFFNP" "$TFEND" "$SELGEN$CUTGNP" "$CUT$CUTEND$CUTNP" "$WEIGHT" "$CENTMIN" "$CENTMAX"
 rm MCefficiency.exe
 fi
 if [ $DO_PLOTPNNP -eq 1 ]; then      
