@@ -1,7 +1,6 @@
 using namespace std;
-
-#include "uti.h"
-#include "saveMassHisto.h"
+#include "../include/uti.h"
+#include "../include/parameters.h"
 Int_t pcolor[5] = {kGray+3,kRed,kBlue,kRed,kBlue};
 TString tfend[5] = {"inclusive","v2_inpl","v2_outpl","v3_inpl","v3_outpl"};
 void plotFractions(Float_t centmin, Float_t centmax)
@@ -76,8 +75,7 @@ void plotFractions(Float_t centmin, Float_t centmax)
   legInclusive->AddEntry(grFraction_DCA[0], "Inclusive (DCA < 0.008 cm)", "pl");
   legInclusive->Draw();
   texCent->Draw();
-  cInclusive->SaveAs(Form("plotsResult/cInclusive_cent_%.0f_%.0f.pdf",centmin,centmax));
-  cInclusive->SaveAs(Form("plotsResult/cInclusive_cent_%.0f_%.0f.png",centmin,centmax));
+  cInclusive->SaveAs(Form("plotsResult/cPromptFraction_Inclusive_cent_%.0f_%.0f.pdf",centmin,centmax));
 
   TCanvas* cV2 = new TCanvas("cV2","",600,600);
   hempty->Draw();
@@ -101,8 +99,7 @@ void plotFractions(Float_t centmin, Float_t centmax)
   legV2->AddEntry(grFraction_DCA[2], "v_{2} out of plain (DCA < 0.008 cm)", "pl");
   legV2->Draw();
   texCent->Draw();
-  cV2->SaveAs(Form("plotsResult/cV2_cent_%.0f_%.0f.pdf",centmin,centmax));
-  cV2->SaveAs(Form("plotsResult/cV2_cent_%.0f_%.0f.png",centmin,centmax));
+  cV2->SaveAs(Form("plotsResult/cPromptFraction_V2_cent_%.0f_%.0f.pdf",centmin,centmax));
 
   TCanvas* cV3 = new TCanvas("cV3","",600,600);
   hempty->Draw();
@@ -126,8 +123,7 @@ void plotFractions(Float_t centmin, Float_t centmax)
   legV3->AddEntry(grFraction_DCA[4], "v_{3} out of plain (DCA < 0.008 cm)", "pl");
   legV3->Draw();
   texCent->Draw();
-  cV3->SaveAs(Form("plotsResult/cV3_cent_%.0f_%.0f.pdf",centmin,centmax));
-  cV3->SaveAs(Form("plotsResult/cV3_cent_%.0f_%.0f.png",centmin,centmax));
+  cV3->SaveAs(Form("plotsResult/cPromptFraction_V3_cent_%.0f_%.0f.pdf",centmin,centmax));
 }
 
 int main(int argc, char *argv[])
