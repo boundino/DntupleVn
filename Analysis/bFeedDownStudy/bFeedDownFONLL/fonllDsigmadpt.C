@@ -1,6 +1,6 @@
 using namespace std;
-#include "../bFeedDown/uti.h"
-#include "../bFeedDown/saveMassHisto.h"
+#include "../include/uti.h"
+#include "../include/parameters.h"
 
 void fonllDsigmadpt(TString inputFONLL="fonlls/FONLL_pp_promptDzero_5TeV_y1.dat", TString outputFONLL="outfiles/FONLL_pp_promptDzero_5TeV_y1.root")
 {
@@ -49,13 +49,16 @@ void fonllDsigmadpt(TString inputFONLL="fonlls/FONLL_pp_promptDzero_5TeV_y1.dat"
   TH1F* hmaxall = new TH1F("hmaxall","",nFonllBins,fstFonllBins,lstFonllBins);
   for(int i=0;i<nFonllBins;i++)
     {
-      hpt->SetBinContent(i+1,central[i]*widFonllBins);
-      hminall->SetBinContent(i+1,min_all[i]*widFonllBins);
-      hmaxall->SetBinContent(i+1,max_all[i]*widFonllBins);
+      hpt->SetBinContent(i+1,central[i]);
+      hminall->SetBinContent(i+1,min_all[i]);
+      hmaxall->SetBinContent(i+1,max_all[i]);
     }
   TH1F* hpt_rebin = (TH1F*)hpt->Rebin(nPtBins,"hpt_rebin",ptBins);
   TH1F* hminall_rebin = (TH1F*)hminall->Rebin(nPtBins,"hminall_rebin",ptBins);
   TH1F* hmaxall_rebin = (TH1F*)hmaxall->Rebin(nPtBins,"hmaxall_rebin",ptBins);
+  hpt_rebin->Scale(widFonllBins);
+  hminall_rebin->Scale(widFonllBins);
+  hmaxall_rebin->Scale(widFonllBins);
   divideBinWidth(hpt_rebin,false);
   divideBinWidth(hminall_rebin,false);
   divideBinWidth(hmaxall_rebin,false);
@@ -78,8 +81,7 @@ void fonllDsigmadpt(TString inputFONLL="fonlls/FONLL_pp_promptDzero_5TeV_y1.dat"
   TGraphAsymmErrors* gaeSigmaDzero=(TGraphAsymmErrors*)gaeSigma->Clone();
   gaeSigmaDzero->SetName("gaeSigmaDzero");
   gaeSigmaDzero->SetFillColor(2);
-  gaeSigmaDzero->SetFillStyle(3001); 
-  //gaeSigmaDzero->SetTitle(";p_{T}(GeV/c);d#sigma/dp_{T} (D^{0}) (pb GeV-1c)");
+  gaeSigmaDzero->SetFillStyle(3001);
   
   for(int i=0;i<gaeSigmaDzero->GetN();i++)
     {
@@ -90,11 +92,13 @@ void fonllDsigmadpt(TString inputFONLL="fonlls/FONLL_pp_promptDzero_5TeV_y1.dat"
      
   TCanvas* cFonll = new TCanvas("cFonll","",600,500);
   cFonll->SetLogy();
-  TH2F* hempty = new TH2F("hempty","",10,0,100.,10,1.e+1,5.e+9);  
+  TH2F* hempty = new TH2F("hempty","",10,0,50.,10,1.e+2,1.e+11);
   hempty->GetXaxis()->SetTitle("p_{T} (GeV/c)");
-  hempty->GetYaxis()->SetTitle("d#sigma(D)/dp_{T} (pb#cdotGeV^{-1}c)");
+  hempty->GetYaxis()->SetTitle("d#sigma(D)/dp_{T} (pb#upointGeV^{-1}c)");
+  hempty->GetXaxis()->CenterTitle();
+  hempty->GetYaxis()->CenterTitle();
   hempty->GetXaxis()->SetTitleOffset(1.);
-  hempty->GetYaxis()->SetTitleOffset(.9);
+  hempty->GetYaxis()->SetTitleOffset(1.2);
   hempty->GetXaxis()->SetTitleSize(0.045);
   hempty->GetYaxis()->SetTitleSize(0.045);
   hempty->GetXaxis()->SetTitleFont(42);
@@ -116,40 +120,35 @@ void fonllDsigmadpt(TString inputFONLL="fonlls/FONLL_pp_promptDzero_5TeV_y1.dat"
   gaeSigmaDzero->SetLineColor(2);
   gaeSigmaDzero->Draw("psame");
 
-  TLatex* tlatex = new TLatex(0.18,0.85,"pp collisions from FONLL, |y|<1");
+  TLatex* tlatex = new TLatex(0.37,0.85,"pp 5TeV FONLL calculation");
   tlatex->SetNDC();
   tlatex->SetTextColor(1);
   tlatex->SetTextFont(42);
-  tlatex->SetTextSize(0.04);
+  tlatex->SetTextSize(0.042);
   tlatex->Draw();
   
-  TLatex* tlatextotunc = new TLatex(0.18,0.80,"Total syst uncertainties shown");
+  TLatex* tlatextotunc = new TLatex(0.37,0.80,"Total syst uncertainties shown");
   tlatextotunc->SetNDC();
   tlatextotunc->SetTextColor(1);
   tlatextotunc->SetTextFont(42);
-  tlatextotunc->SetTextSize(0.04);
+  tlatextotunc->SetTextSize(0.042);
   tlatextotunc->Draw();
   
-  TLatex* tlatexD0 = new TLatex(0.2,0.7,"D^{0},|y|<1, BR unc not shown");
+  TLatex* tlatexD0 = new TLatex(0.37,0.75,"D^{0},|y|<1, BR unc not shown");
   tlatexD0->SetNDC();
   tlatexD0->SetTextColor(1);
   tlatexD0->SetTextFont(42);
-  tlatexD0->SetTextSize(0.05);
+  tlatexD0->SetTextSize(0.042);
   tlatexD0->Draw();
   
-  TLatex* tlatextemp = new TLatex(0.2,0.75,"");
-  tlatextemp->SetNDC();
-  tlatextemp->SetTextColor(1);
-  tlatextemp->SetTextFont(42);
-  tlatextemp->SetTextSize(0.05);
-  tlatextemp->Draw();
-  
-  TLegend* leg = new TLegend(0.4,0.5,0.89,0.6);
+  TLegend* leg = new TLegend(0.35,0.60,0.90,0.70);
+  leg->SetBorderSize(0);
+  leg->SetLineColor(0);
   leg->SetFillColor(0);
-  TLegendEntry* ent_gaeSigma = leg->AddEntry(gaeSigma,"Frag.Fraction=1.0 (pure FONLL)","PL");
-  ent_gaeSigma->SetTextColor(gaeSigma->GetMarkerColor());
-  TLegendEntry* ent_gaeSigmaDzero = leg->AddEntry(gaeSigmaDzero,"Multiplied by Frag. Fraction=0.577","PL");
-  ent_gaeSigmaDzero->SetTextColor(gaeSigmaDzero->GetMarkerColor());
+  leg->SetTextFont(42);
+  leg->SetTextSize(0.042);
+  TLegendEntry* ent_gaeSigma = leg->AddEntry(gaeSigma,"Frag.Frac.=1.0 (pure FONLL)","PL");
+  TLegendEntry* ent_gaeSigmaDzero = leg->AddEntry(gaeSigmaDzero,"Multiplied by Frag.Frac.=0.577","PL");
   leg->Draw();
 
   gaeSigma->SetName("gaeSigma");
@@ -163,7 +162,7 @@ void fonllDsigmadpt(TString inputFONLL="fonlls/FONLL_pp_promptDzero_5TeV_y1.dat"
   hpt->Write();
   hminall->Write();
   hmaxall->Write();
-
+  foutput->Close();
 }
 
 int main(int argc, char *argv[])
