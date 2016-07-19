@@ -1,15 +1,15 @@
 using namespace std;
-#ifndef _ANA_BFEEDDOWN_SAVEMASSHISTO_H_
-#define _ANA_BFEEDDOWN_SAVEMASSHISTO_H_
+#ifndef _ANA_BFEEDDOWN_PARAMETERS_H_
+#define _ANA_BFEEDDOWN_PARAMETERS_H_
 
 #include "uti.h"
 #include "setBranches.h"
 const float PI = 3.14159265359;
 
-const int nPtBins = 8;
-Double_t ptBins[nPtBins+1] = {2.0, 3.0, 4.0, 6.0, 8.0, 10.0, 15.0, 25.0, 40.0};
-Double_t ffls3dcut[nPtBins] = {5.86,  5.86,  4.86,  4.54,  4.42,  4.06,  3.50,  3.00};
-Double_t vprobcut[nPtBins] =  {0.224, 0.224, 0.170, 0.125, 0.091, 0.069, 0.054, 0.050};
+const int nPtBins = 9;
+Double_t ptBins[nPtBins+1] = {1.0, 2.0, 3.0, 4.0, 6.0, 8.0, 10.0, 15.0, 25.0, 40.0};
+Double_t ffls3dcut[nPtBins] = {6.00,  5.86,  5.86,  4.86,  4.54,  4.42,  4.06,  3.50,  3.00};
+Double_t vprobcut[nPtBins] =  {0.250, 0.224, 0.224, 0.170, 0.125, 0.091, 0.069, 0.054, 0.050};
 const int nPhiBins = 5;
 
 const int nCentBins = 6;
@@ -29,7 +29,8 @@ Double_t massBins[nMassBins+1];
 const int nDcaBins = 12;
 Double_t fstDcaBin = 0.001;
 Double_t widDcaBin = 1.27;
-Double_t dcaBins[nDcaBins+1] = {0, 0.001, 0.002, 0.003, 0.004, 0.006, 0.008, 0.012, 0.016, 0.024, 0.032, 0.045, 0.070};
+//Double_t dcaBins[nDcaBins+1] = {0, 0.001, 0.002, 0.003, 0.004, 0.006, 0.008, 0.012, 0.016, 0.024, 0.032, 0.045, 0.070};
+Double_t dcaBins[nDcaBins+1] = {0, 0.001, 0.00227, 0.0038829, 0.00593128, 0.008, 0.0118366, 0.0160324, 0.0213612, 0.0281287, 0.0367235, 0.0476388, 0.07};
 const int nD0Bins = 20;
 Double_t fstD0Bin = 3.5;
 Double_t widD0Bin = 5;
